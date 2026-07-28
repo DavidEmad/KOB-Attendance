@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>School Attendance Scanner</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="scanner-panel" aria-labelledby="pageTitle">
+        <div class="topline">
+          <div>
+            <p class="eyebrow">Egypt time attendance</p>
+            <h1 id="pageTitle">QR Attendance Scanner</h1>
+          </div>
+          <span id="clock" class="clock">--:--:--</span>
+        </div>
+
+        <div id="reader" class="reader" aria-label="QR camera scanner"></div>
+
+        <div class="controls">
+          <button id="startButton" type="button" class="primary-action">Start Camera</button>
+          <button id="stopButton" type="button" class="secondary-action" disabled>Stop</button>
+        </div>
+
+        <form id="manualForm" class="manual-form">
+          <label for="manualQr">Manual QR value</label>
+          <div class="manual-row">
+            <input id="manualQr" type="text" placeholder="A,David Emad" autocomplete="off" />
+            <button type="submit" class="secondary-action">Submit</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="status-panel" aria-live="polite">
+        <div id="statusBox" class="status-box idle">
+          <span class="status-label">Ready</span>
+          <strong id="statusText">Start the camera and scan a student QR code.</strong>
+        </div>
+
+        <div class="rules">
+          <h2>Recording Rules</h2>
+          <dl>
+            <div>
+              <dt>Before 17:30</dt>
+              <dd>P, green</dd>
+            </div>
+            <div>
+              <dt>After 17:30</dt>
+              <dd>L, red</dd>
+            </div>
+            <div>
+              <dt>After 20:00 trigger</dt>
+              <dd>Blank cells become U</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="recent">
+          <h2>Recent Scans</h2>
+          <ol id="scanLog"></ol>
+        </div>
+      </aside>
+    </main>
+  </body>
+</html>

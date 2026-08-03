@@ -87,21 +87,21 @@ function submitScan(rawValue) {
   if (!parsed) {
     setStatus("error", "QR must look like: A,David Emad", "Invalid QR");
     addLog(`Invalid QR: ${cleanValue || "empty"}`);
-    return;
+    return Promise.resolve(); // ضيف ده
   }
 
   if (!canSendScan(cleanValue)) {
-    return;
+    return Promise.resolve(); // ضيف ده
   }
 
   if (SCRIPT_URL.includes("PASTE_YOUR")) {
     setStatus("error", "Add your Google Apps Script web app URL in app.js first.", "Missing URL");
     addLog("Google Script URL is not configured");
-    return;
+    return Promise.resolve(); // ضيف ده
   }
 
   setStatus("sending", `Sending ${parsed.groupId}, ${parsed.studentName}...`, "Sending");
-  callScript(cleanValue)
+  return callScript(cleanValue) // ضيف return هنا
     .then((result) => {
       const status = result.status || "ok";
       const message = result.message || "Attendance recorded.";
@@ -151,6 +151,21 @@ function callScript(qrValue) {
   });
 }
 
+function handleDecodedScan(decodedText) {
+  if (!scanning || qrScanner.getState() === Html5QrcodeScannerState.PAUSED) {
+    return;
+  }
+
+  qrScanner.pause(true); // true = يجمد آخر فريم كصورة (Capture effect)
+
+  submitScan(decodedText).finally(() => {
+    if (scanning) {
+      qrScanner.resume();
+    }
+  });
+}
+
+
 async function startScanner() {
   if (!window.Html5Qrcode) {
     setStatus("error", "Scanner library did not load. Check your internet connection.", "Scanner");
@@ -168,7 +183,7 @@ async function startScanner() {
     await qrScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: { width: 260, height: 260 } },
-      (decodedText) => submitScan(decodedText),
+      (decodedText) => handleDecodedScan(decodedText),
       () => {}
     );
     scanning = true;

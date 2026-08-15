@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxheb5ffZU7KucS-uH7e6AgVPmkumFjOTOUQQjy6jzlaCdS_5HXwhCom06QXDwbzoMSSQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY4kSucDj-PZAbroYXubCs3YidPGC436kpLomhBFBXG86NDEvajLdXZhezh2VOdaYijg/exec";
 const EGYPT_TIMEZONE = "Africa/Cairo";
 const SCAN_COOLDOWN_MS = 3500;
 
@@ -52,19 +52,13 @@ function addLog(message) {
 }
 
 function parseQr(rawValue) {
-  const parts = rawValue.split(",");
-  if (parts.length < 2) {
+  const studentName = rawValue.trim();
+
+  if (!studentName) {
     return null;
   }
 
-  const groupId = parts.shift().trim();
-  const studentName = parts.join(",").trim();
-
-  if (!groupId || !studentName) {
-    return null;
-  }
-
-  return { groupId, studentName };
+  return { studentName };
 }
 
 function canSendScan(rawValue) {
@@ -85,7 +79,7 @@ function submitScan(rawValue) {
   const parsed = parseQr(cleanValue);
 
   if (!parsed) {
-    setStatus("error", "QR must look like: A,David Emad", "Invalid QR");
+    setStatus("error", "QR is empty or unreadable.", "Invalid QR");
     addLog(`Invalid QR: ${cleanValue || "empty"}`);
     return Promise.resolve(); // ضيف ده
   }
@@ -100,7 +94,7 @@ function submitScan(rawValue) {
     return Promise.resolve(); // ضيف ده
   }
 
-  setStatus("sending", `Sending ${parsed.groupId}, ${parsed.studentName}...`, "Sending");
+  setStatus("sending", `Sending ${parsed.studentName}...`, "Sending");
   return callScript(cleanValue) // ضيف return هنا
     .then((result) => {
       const status = result.status || "ok";

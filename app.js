@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzzP0YiqChQQNfFRJMiQFolUFr1WVx-L8xcDyHwK3tPC9_GYkjgyTPLCh-VJVVOEILvQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbznJSCBqiQUJmynfIrARYQaqUDA7fXQSxMr2D517AIcpfye2oGSj6txllL9eoC7mFTZ/exec";
 const EGYPT_TIMEZONE = "Africa/Cairo";
 const SCAN_COOLDOWN_MS = 3500;
 
